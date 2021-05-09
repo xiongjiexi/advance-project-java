@@ -1,0 +1,8 @@
+# idea conf files
+**/.idea
+.idea
+**/*.ipr
+**/*.iws
+**/*.iml
+
+**/target
