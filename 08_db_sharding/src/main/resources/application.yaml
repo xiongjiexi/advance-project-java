@@ -1,0 +1,67 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: shop project
+#  datasource:
+#    url: jdbc:mysql://192.168.3.29:3306/d_shop
+#    username: root
+#    password: a123456
+  # 配置sharding jdbc分片规则
+  shardingsphere:
+    datasource:
+      # 连接名称（下面要用这个名称来区分库）
+      names: ds0,ds1
+      ds0:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://192.168.3.29:3306/d_shop_0?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=Asia/Shanghai
+        username: root
+        password: a123456
+        initialSize: 5      #初始化大小
+        maxActive: 200       #最大值
+        maxWait: 2000      #最大等待时间，配置获取连接等待超时，时间单位都是毫秒ms
+        timeBetweenEvictionRunsMillis: 60000    #配置间隔多久才进行一次检测，检测需要关闭的空闲连接
+      ds1:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://192.168.3.29:3306/d_shop_1?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=Asia/Shanghai
+        username: root
+        password: a123456
+        initialSize: 5      #初始化大小
+        maxActive: 200       #最大值
+        maxWait: 2000      #最大等待时间，配置获取连接等待超时，时间单位都是毫秒ms
+        timeBetweenEvictionRunsMillis: 60000    #配置间隔多久才进行一次检测，检测需要关闭的空闲连接
+    # 配置分片规则
+    sharding:
+      # 按表来区分
+      tables:
+        t_order:
+          # 配置数据节点
+          actualDataNodes: ds${0..1}.t_order_${0..15}
+          # 分库策略
+          databaseStrategy:
+            inline:
+              # 分库的规则 用user_id这个字段来分库 总共有两个库 及ds0（user0）与ds1（user1）
+              shardingColumn: user_id
+              algorithmExpression: ds${user_id % 2}
+          # 分表策略
+          tableStrategy:
+            inline:
+              shardingColumn: id
+              algorithmExpression: t_order_${id % 16}
+          keyGenerator:
+            column: id
+            type: SNOWFLAKE  # 使用雪花算法，因为后缀是根据序列号生成的，所以单台机器验证取模时会出现永远只在个别表，而不是均匀分布
+      bindingTables:
+        t_order
+      broadcastTables:
+        t_config
+      defaultDataSourceName: ds0
+
+    props:
+      sql.show: true
+
+mybatis:
+  type-aliases-package: org.example.model
