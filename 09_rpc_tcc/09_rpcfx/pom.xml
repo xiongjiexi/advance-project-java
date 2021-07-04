@@ -17,6 +17,7 @@
         <module>rpcfx_api</module>
         <module>rpcfx_demo_consumer</module>
         <module>rpcfx_demo_provider</module>
+        <module>rpcfx_core</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -47,6 +48,24 @@
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>1.2.76</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib</artifactId>
+            <version>3.3.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+            <version>4.1.65.Final</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-core</artifactId>
+            <version>5.7.2</version>
         </dependency>
     </dependencies>
 
