@@ -1,6 +1,8 @@
 package cn.jessexiong.rpcfx.client;
 
-import cn.jessexiong.rpcfx.demo.api.*;
+import cn.jessexiong.rpcfx.demo.api.Filter;
+import cn.jessexiong.rpcfx.demo.api.RpcfxRequest;
+import cn.jessexiong.rpcfx.demo.api.RpcfxResponse;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.parser.ParserConfig;
 import io.netty.bootstrap.Bootstrap;
@@ -22,8 +24,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Rpcfx {
 
@@ -31,21 +31,21 @@ public class Rpcfx {
         ParserConfig.getGlobalInstance().addAccept("cn.jessexiong.rpcfx");
     }
 
-    public static <T, filters> T createFromRegistry(final Class<T> serviceClass,
-                                                    final String zkUrl,
-                                                    Router router,
-                                                    LoadBalancer loadBalancer,
-                                                    Filter filter) {
-        List<String> invokers = new ArrayList<>();
+//    public static <T, filters> T createFromRegistry(final Class<T> serviceClass,
+//                                                    final String zkUrl,
+//                                                    Router router,
+//                                                    LoadBalancer loadBalancer,
+//                                                    Filter filter) {
+//        List<String> invokers = new ArrayList<>();
+//
+//        List<String> urls = router.route(invokers);
+//
+//        String url = loadBalancer.select(urls);
+//
+//        return (T) create(serviceClass, url, filter);
+//    }
 
-        List<String> urls = router.route(invokers);
-
-        String url = loadBalancer.select(urls);
-
-        return (T) create(serviceClass, url, filter);
-    }
-
-    public static <T> T create(Class<T> serviceClass, String url, Filter... filters) {
+    public static <T> T create(Class<T> serviceClass, String url,String group, String version, Filter... filters) {
         Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(serviceClass);
         enhancer.setUseCache(false);
@@ -56,6 +56,12 @@ public class Rpcfx {
                 req.setServiceClass(serviceClass.getName());
                 req.setMethod(method.getName());
                 req.setParams(objects);
+                if (group != null) {
+                    req.setGroup(group);
+                }
+                if (version != null) {
+                    req.setVersion(version);
+                }
 
                 if (filters != null) {
                     for (Filter filter : filters) {

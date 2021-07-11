@@ -8,7 +8,7 @@ import cn.jessexiong.rpcfx.demo.api.UserService;
 public class ClientApplication {
 
     public static void main(String[] args) {
-        UserService userService = Rpcfx.create(UserService.class, "http://localhost:8080/");
+        UserService userService = Rpcfx.create(UserService.class, "http://localhost:8080/", "group2", "2");
         User user = userService.findById(1);
         System.out.println("find user id = 1 from server :"+ user.getName());
     }

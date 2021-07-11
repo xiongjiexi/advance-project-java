@@ -18,10 +18,20 @@ public class RpcfxInvoker {
         this.resolver = resolver;
     }
 
-    public RpcfxResponse invoke(RpcfxRequest req) {
+    public RpcfxResponse invoke(RpcfxRequest req, String group, String version) {
         RpcfxResponse resp = new RpcfxResponse();
         String serviceClass = req.getServiceClass();
 
+        if (!group.equals(req.getGroup())) {
+            resp.setStatus(false);
+            resp.setException(new IllegalArgumentException("group must equals server group"));
+            return resp;
+        }
+        if (Integer.parseInt(version) > Integer.parseInt(req.getVersion())) {
+            resp.setStatus(false);
+            resp.setException(new IllegalArgumentException("version must great than server version"));
+            return resp;
+        }
         Object service = resolver.resolve(serviceClass);
         try {
             Method method = resolveMethodFromClass(service.getClass(), req.getMethod());

@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ServerApplication {
 
+    @Autowired
+    private ConfigProperty config;
+
     public static void main(String[] args) {
         SpringApplication.run(ServerApplication.class, args);
     }
@@ -23,7 +26,7 @@ public class ServerApplication {
 
     @PostMapping("/")
     public RpcfxResponse invoke(@RequestBody RpcfxRequest request) {
-        return invoker.invoke(request);
+        return invoker.invoke(request, config.group, config.version);
     }
 
     @Bean
