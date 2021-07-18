@@ -1,0 +1,30 @@
+redis:
+  host: 192.168.3.29
+  port: 6379
+  password:
+  # Redis数据库索引（默认为0）
+  database: 0
+  # 连接超时时间（毫秒）
+  timeout: 10000
+  #连接耗尽时是否阻塞, false报异常,ture阻塞直到超时, 默认true
+  block-when-exhausted: true
+  pool:
+    # 连接池中的最大空闲连接
+    max-idle: 20
+    # 连接池中的最小空闲连接
+    min-idle: 5
+    # 连接池最大连接数（使用负值表示没有限制）
+    max-active: 20
+    # 连接池最大阻塞等待时间（使用负值表示没有限制）
+    max-wait: 10000
+
+spring:
+  datasource:
+    url: jdbc:mysql://192.168.3.29:3306/d_shop_0?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=Asia/Shanghai
+    username: root
+    password: a123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+
+mybatis:
+  type-aliases-package: cn.jessexiong.distribution.cache.model
