@@ -1,0 +1,10 @@
+spring:
+  #activemq
+  activemq:
+    broker-url: tcp://192.168.3.29:61616
+    in-memory: false
+    pool:
+      #true表示使用连接池
+      enabled: true
+      #连接池最大连接数
+      max-connections: 10
