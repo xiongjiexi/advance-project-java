@@ -1,0 +1,20 @@
+spring:
+  kafka:
+    consumer:
+      group-id: g1
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    bootstrap-servers: 192.168.3.29:9090
+
+app:
+  topic:
+    t1: topic-t1
+
+logging:
+  level:
+    root: WARN
+    org.springframework.web: INFO
