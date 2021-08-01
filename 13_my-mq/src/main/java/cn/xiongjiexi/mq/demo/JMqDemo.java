@@ -21,7 +21,7 @@ public class JMqDemo {
         flag[0] = true;
         new Thread(() -> {
             while (flag[0]) {
-                JMessage<Order> message = consumer.poll(200);
+                JMessage<Order> message = consumer.poll(100);
                 if(null != message) {
                     System.out.println(message.getBody());
                 }

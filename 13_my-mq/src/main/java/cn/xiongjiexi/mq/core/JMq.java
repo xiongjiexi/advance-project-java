@@ -3,8 +3,6 @@ package cn.xiongjiexi.mq.core;
 import lombok.SneakyThrows;
 
 import java.util.HashMap;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
 
 public class JMq {
 
@@ -12,20 +10,38 @@ public class JMq {
 
     private final int capacity;
 
-    private LinkedBlockingQueue<JMessage<String>> queue;
+    private JMessage[] queue;
+
+    /**
+     * 插入数组的偏移量
+     */
+    private int offset;
+
+    /**
+     * 读取数据的指针
+     */
+    private int index;
 
     public JMq(String topic, int capacity) {
         this.topic = topic;
         this.capacity = capacity;
-        this.queue = new LinkedBlockingQueue<>(capacity);
+        queue = new JMessage[capacity];
+        offset = -1;
+        index = -1;
     }
 
     public boolean send(Object msg) {
-        return queue.offer(new JMessage(new HashMap<>(), msg));
+        if (offset+1 >= capacity) return false;
+        queue[offset+1] = new JMessage(new HashMap<>(), msg);
+        offset++;
+        return true;
     }
 
     @SneakyThrows
-    public JMessage<String> poll(long m) {
-        return queue.poll(m, TimeUnit.MILLISECONDS);
+    public JMessage poll(long m) {
+        if (index >= offset) return null;
+        JMessage res = queue[index+1];
+        index++;
+        return res;
     }
 }
